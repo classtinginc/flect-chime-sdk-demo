@@ -238,19 +238,20 @@ export class BackendStack extends cdk.Stack {
     //// ( - ) Utility
     // https://github.com/aws/aws-cdk/issues/906
     const addCorsOptions = (apiResource: IResource) => {
-      let origin
-      if (FRONTEND_LOCAL_DEV) {
-        // origin = "'https://localhost:3000'"
-        origin = "'https://192.168.1.4:3000'"
-      } else {
-        origin = `'https://${bucket.bucketDomainName}'`
-      }
+      // let origin
+      // if (FRONTEND_LOCAL_DEV) {
+      //   // origin = "'https://localhost:3000'"
+      //   origin = "'https://192.168.1.4:3000'"
+      // } else {
+      //   origin = '*'
+      //   // origin = `'https://${bucket.bucketDomainName}'`
+      // }
       apiResource.addMethod('OPTIONS', new MockIntegration({
         integrationResponses: [{
           statusCode: '200',
           responseParameters: {
             'method.response.header.Access-Control-Allow-Headers': "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Flect-Access-Token'",
-            'method.response.header.Access-Control-Allow-Origin': origin,
+            'method.response.header.Access-Control-Allow-Origin': "'*'",
             'method.response.header.Access-Control-Allow-Credentials': "'true'",
             'method.response.header.Access-Control-Allow-Methods': "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
           }
@@ -275,7 +276,7 @@ export class BackendStack extends cdk.Stack {
 
 
 
-    //// ( - ) Rest API 
+    //// ( - ) Rest API
     const restApi: RestApi = new RestApi(this, "ChimeAPI", {
       restApiName: `${id}_restApi`,
     })
@@ -483,7 +484,7 @@ export class BackendStack extends cdk.Stack {
     //   identitySource: 'method.request.header.Authorization',
     //   authorizerCredentials: role.roleArn,
     //   authorizerUri: `arn:aws:apigateway:${this.region}:lambda:path/2015-03-31/functions/${lambdaFuncMessageAuth.functionArn}/invocations`,
-    // })    
+    // })
 
     //// Route
     const connectRoute = new v2.CfnRoute(this, "connectRoute", {
@@ -531,7 +532,7 @@ export class BackendStack extends cdk.Stack {
 
 
     ///////////////////////////////
-    //// Output 
+    //// Output
     ///////////////////////////////
     new CfnOutput(this, "UserPoolId", {
       description: "UserPoolId",
